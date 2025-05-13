@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from mcp_use import MCPAgent, MCPClient
 import os
+from rich.console import Console
 
 load_dotenv()
 
@@ -14,7 +15,14 @@ async def run_memory_chat():
     #configure file path
     config_file = "browser_mcp.json"
 
-    print("Initializing chat.....")
+    console = Console()
+    console.print("""
+        [bold pink]
+        🌷 Hi, I’m MochiBot — your cozy AI companion! 🧋
+        I’m here to chat, giggle, and help however I can~ 💖
+        Type 'help' to see what I can do!
+        [/bold pink]
+        """)
 
     #Create MCP client and agent with memory enables
     client = MCPClient.from_config_file(config_file)
@@ -49,12 +57,19 @@ async def run_memory_chat():
                 print("Conversation history cleared")
                 continue
 
+            if user_input.lower() == "help":
+                print("🛠 Available commands:\n• exit\n• clear\n• help\n• (Ask me anything!)")
+                continue
+
             #Get repsonse from agent
-            print("\nAssistant:", end="", flush=True)
+            console.print("\n[bold cyan]🌸 GroqBot:[/bold cyan]", end=" ")
+
+
 
             try:
                 response = await agent.run(user_input)
-                print(response)
+                print(f"{response} ✨")
+
 
             except Exception as e:
                 print(f"\nError:{e}")
